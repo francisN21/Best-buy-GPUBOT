@@ -1,33 +1,45 @@
 // import puppeteer from "puppeteer";
 const puppeteer = require("puppeteer");
 
+// uncomment below once it is ready to mount as chrome extension
 // const init = document.querySelector(".start");
 
+// add URL here
 const test_url =
   "https://www.bestbuy.com/site/endust-screen-cleaning-wipes-70-pack-blue/5611313.p?skuId=5611313";
 
+// DOM needs to load and go to the product page
 const startBrowser = async () => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({
+    headless: false,
+    defaultViewport: { width: 1366, height: 768 },
+  });
   const page = await browser.newPage();
   await page.goto(test_url);
   return page;
 };
 
+// add to cart
 const addToCart = async (page) => {
   await page.waitFor(3000);
+  // add item to cart
+
   await page.$eval(
     "[class='btn btn-primary btn-lg btn-block btn-leading-ficon add-to-cart-button']",
-    (element) => element.click()
+    (element) => {
+      element.click();
+    }
   );
-  await page.waitFor(3000);
+  await page.waitFor(2000);
+  // another page to add to go to cart
   await page.$eval("[class='btn btn-secondary btn-sm btn-block ']", (element) =>
     element.click()
   );
-  await page.waitFor(3000);
+  await page.waitFor(2000);
   await page.$eval("[class='btn btn-lg btn-block btn-primary']", (element) =>
     element.click()
   );
-  await page.waitFor(3000);
+  await page.waitFor(4000);
   await page.$eval(
     "[class='btn btn-secondary btn-lg cia-guest-content__continue guest']",
     (element) => element.click()
@@ -37,6 +49,7 @@ const addToCart = async (page) => {
 
 const fillInfo = async (page) => {
   await page.waitFor(3000);
+  // personal info section
   await page.type(
     "[id='consolidatedAddresses.ui_address_2.firstName']",
     "Francisco"
@@ -61,23 +74,16 @@ const fillInfo = async (page) => {
   await page.$eval("[class='btn btn-lg btn-block btn-secondary']", (element) =>
     element.click()
   );
-  await page.waitFor(5000);
-  await page.type("[id='optimized-cc-card-number']", "4651963205549150");
-  await page.select("[name='expiration-month']", "09");
-  await page.select("[name='expiration-year']", "2023");
-  await page.type("[id='credit-card-cvv']", "914");
-  await page.waitFor(5000);
-  await page.$eval("[class='btn btn-lg btn-block btn-primary']", (element) =>
-    element.click()
-  );
+  // end personal info and go to credit card page
 };
 const fillCard = async (page) => {
   await page.waitFor(5000);
+  // fake credit card info selected and checks out the item
   await page.type("[id='optimized-cc-card-number']", "4651963205549150");
   await page.select("[name='expiration-month']", "09");
   await page.select("[name='expiration-year']", "2023");
   await page.type("[id='credit-card-cvv']", "914");
-  await page.waitFor(5000);
+  await page.waitFor(2000);
   await page.$eval("[class='btn btn-lg btn-block btn-primary']", (element) =>
     element.click()
   );
@@ -86,7 +92,7 @@ const fillCard = async (page) => {
 // init.addEventListener("click", function (e) {
 //   e.preventDefault();
 //   alert("Hello");
-//     startBrowser();
+//     testInit();
 // });
 
 const testInit = async () => {
