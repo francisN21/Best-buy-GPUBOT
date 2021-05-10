@@ -6,7 +6,7 @@ require("dotenv").config();
 // const init = document.querySelector(".start");
 
 // add URL here
-const test_url =
+const gpu_URL =
   "https://www.bestbuy.com/site/insignia-8-oz-cleaning-dusters-2-pack/8045009.p?skuId=8045009";
 
 // DOM needs to load and go to the product page
@@ -16,7 +16,7 @@ const startBrowser = async () => {
     defaultViewport: { width: 1366, height: 768 },
   });
   const page = await browser.newPage();
-  await page.goto(test_url);
+  await page.goto(gpu_URL);
   return page;
 };
 
@@ -100,15 +100,17 @@ const fillCard = async (page) => {
     await page.waitFor(4000);
     console.log("filling up credit");
     // fake credit card info selected and checks out the item
-    await page.type("[id='optimized-cc-card-number']", "4651963205549150");
+    await page.type("[id='optimized-cc-card-number']", process.env.CREDIT);
     await page.waitFor(1500);
-    await page.select("[name='expiration-month']", "09");
-    await page.select("[name='expiration-year']", "2023");
-    await page.type("[id='credit-card-cvv']", "914");
+    await page.select("[name='expiration-month']", process.env.MONTH);
+    await page.select("[name='expiration-year']", process.env.YEAR);
+    await page.type("[id='credit-card-cvv']", process.env.CVV);
     await page.waitFor(2000);
     await page.$eval("[class='btn btn-lg btn-block btn-primary']", (element) =>
       element.click()
     );
+
+    console.log("Purchase complete!");
   } catch (error) {
     console.log("running fill info again");
     await page.reload();

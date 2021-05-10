@@ -11,6 +11,8 @@ npm i to install all node modules
 
 create .env file and add your user information(address, card information)
 
+Once information are added you can add the link of desired GPU on the url section
+
 ### Usage
 
 use to buy out of stock GPU
