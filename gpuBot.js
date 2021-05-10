@@ -21,30 +21,34 @@ const startBrowser = async () => {
 };
 
 const addToCart = async (page) => {
-  await page.waitFor(3000);
+  await page.waitForTimeout(3000);
   try {
+    console.log("Adding item to cart");
     await page.$eval(
       "[class='btn btn-primary btn-lg btn-block btn-leading-ficon add-to-cart-button']",
       (element) => {
         element.click();
       }
     );
-    await page.waitFor(2000);
+    await page.waitForTimeout(2000);
     // another page to add to go to cart
+    console.log("Adding item to cart");
     await page.$eval(
       "[class='btn btn-secondary btn-sm btn-block ']",
       (element) => element.click()
     );
-    await page.waitFor(2000);
+    await page.waitForTimeout(2500);
+    console.log("Checking out");
     await page.$eval("[class='btn btn-lg btn-block btn-primary']", (element) =>
       element.click()
     );
-    await page.waitFor(4000);
+    await page.waitForTimeout(3500);
+    console.log("proceeding as guest");
     await page.$eval(
       "[class='btn btn-secondary btn-lg cia-guest-content__continue guest']",
       (element) => element.click()
     );
-    await page.waitFor(3000);
+    await page.waitForTimeout(3000);
   } catch (error) {
     console.log(error + " out of stock");
     await page.reload();
@@ -52,10 +56,11 @@ const addToCart = async (page) => {
   }
 };
 const fillInfo = async (page) => {
-  await page.waitFor(3000);
-  console.log("filling up info");
+  await page.waitForTimeout(3000);
+
   try {
-    await page.waitFor(2000);
+    console.log("filling up info");
+    await page.waitForTimeout(2000);
     // personal info section
     await page.type(
       "[id='consolidatedAddresses.ui_address_2.firstName']",
@@ -83,7 +88,7 @@ const fillInfo = async (page) => {
     );
     await page.type("[id='user.emailAddress']", process.env.EMAIL);
     await page.type("[id='user.phone']", process.env.PHONE);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     await page.$eval(
       "[class='btn btn-lg btn-block btn-secondary']",
       (element) => element.click()
@@ -97,22 +102,22 @@ const fillInfo = async (page) => {
 };
 const fillCard = async (page) => {
   try {
-    await page.waitFor(4000);
+    await page.waitForTimeout(3000);
     console.log("filling up credit");
     // fake credit card info selected and checks out the item
     await page.type("[id='optimized-cc-card-number']", process.env.CREDIT);
-    await page.waitFor(1500);
+    await page.waitForTimeout(1500);
     await page.select("[name='expiration-month']", process.env.MONTH);
     await page.select("[name='expiration-year']", process.env.YEAR);
     await page.type("[id='credit-card-cvv']", process.env.CVV);
-    await page.waitFor(2000);
+    await page.waitForTimeout(1000);
     await page.$eval("[class='btn btn-lg btn-block btn-primary']", (element) =>
       element.click()
     );
 
     console.log("Purchase complete!");
   } catch (error) {
-    console.log("running fill info again");
+    console.log("running fill card info again");
     await page.reload();
     await fillCard(page);
   }
