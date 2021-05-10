@@ -1,12 +1,13 @@
 // import puppeteer from "puppeteer";
 const puppeteer = require("puppeteer");
+require("dotenv").config();
 
 // uncomment below once it is ready to mount as chrome extension
 // const init = document.querySelector(".start");
 
 // add URL here
 const test_url =
-  "https://www.bestbuy.com/site/nvidia-geforce-rtx-3070-8gb-gddr6-pci-express-4-0-graphics-card-dark-platinum-and-black/6429442.p?skuId=6429442";
+  "https://www.bestbuy.com/site/insignia-8-oz-cleaning-dusters-2-pack/8045009.p?skuId=8045009";
 
 // DOM needs to load and go to the product page
 const startBrowser = async () => {
@@ -58,27 +59,30 @@ const fillInfo = async (page) => {
     // personal info section
     await page.type(
       "[id='consolidatedAddresses.ui_address_2.firstName']",
-      "Francisco"
+      process.env.NAME
     );
     await page.type(
       "[id='consolidatedAddresses.ui_address_2.lastName']",
-      "Rones"
+      process.env.LASTNAME
     );
     await page.type(
       "[id='consolidatedAddresses.ui_address_2.street']",
-      "2785 14th St"
+      process.env.STADDRESS
     );
     await page.type(
       "[id='consolidatedAddresses.ui_address_2.city']",
-      "San Pablo"
+      process.env.CITY
     );
-    await page.select("[id='consolidatedAddresses.ui_address_2.state']", "CA");
+    await page.select(
+      "[id='consolidatedAddresses.ui_address_2.state']",
+      process.env.STATE
+    );
     await page.type(
       "[id='consolidatedAddresses.ui_address_2.zipcode']",
-      "94806"
+      process.env.ZIP
     );
-    await page.type("[id='user.emailAddress']", "ininorones@gmail.com");
-    await page.type("[id='user.phone']", "5106853884");
+    await page.type("[id='user.emailAddress']", process.env.EMAIL);
+    await page.type("[id='user.phone']", process.env.PHONE);
     await page.waitFor(1000);
     await page.$eval(
       "[class='btn btn-lg btn-block btn-secondary']",
